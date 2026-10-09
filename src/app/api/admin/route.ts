@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "ketomate1234";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const REPO = "Jose-Carlos-Rivera/ke-tomate";
+const REPO = "ke-tomate/ke-tomate";
 const FILE_PATH = "public/content.json";
 const BRANCH = "main";
 
 function validatePassword(password: string): boolean {
+  if (!ADMIN_PASSWORD) return false;
   return password === ADMIN_PASSWORD;
 }
 
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
 
     if (action === "login") {
       if (!validatePassword(password)) {
-        return NextResponse.json({ error: "Contraseña incorrecta" }, { status: 401 });
+        return NextResponse.json({ error: "Contrase√±a incorrecta" }, { status: 401 });
       }
       const sessionToken = Buffer.from(`${password}:${Date.now()}`).toString("base64");
       return NextResponse.json({ token: sessionToken });
@@ -32,10 +33,10 @@ export async function POST(req: NextRequest) {
         const decoded = Buffer.from(token, "base64").toString();
         const [pwd] = decoded.split(":");
         if (!validatePassword(pwd)) {
-          return NextResponse.json({ error: "Token inválido" }, { status: 401 });
+          return NextResponse.json({ error: "Token inv√°lido" }, { status: 401 });
         }
       } catch {
-        return NextResponse.json({ error: "Token inválido" }, { status: 401 });
+        return NextResponse.json({ error: "Token inv√°lido" }, { status: 401 });
       }
 
       if (!GITHUB_TOKEN) {
@@ -106,11 +107,11 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: "Contenido actualizado. El sitio se actualizará en 1-2 minutos.",
+        message: "Contenido actualizado. El sitio se actualizar√° en 1-2 minutos.",
       });
     }
 
-    return NextResponse.json({ error: "Acción no válida" }, { status: 400 });
+    return NextResponse.json({ error: "Acci√≥n no v√°lida" }, { status: 400 });
   } catch (error) {
     return NextResponse.json(
       { error: "Error del servidor", details: String(error) },
